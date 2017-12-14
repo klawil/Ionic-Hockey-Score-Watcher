@@ -1,0 +1,14 @@
+{
+  "fitbit": {
+    "appType": "app",
+    "appDisplayName": "Christmas Lights Controller",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "#8bc34a",
+    "requestedPermissions": [],
+    "i18n": {
+      "en": {
+        "name": "Christmas Lights Controller"
+      }
+    }
+  }
+}

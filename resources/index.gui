@@ -1,0 +1,61 @@
+<svg>
+  <svg id="loading" width="100%" height="100%">
+    <svg id="puck" width="30" height="20" x="50%-15" y="50%-10">
+      <animate attributeName="x" begin="load" from="30" to="288" dur="3" repeatDur="6" final="keep" repeatCount="indefinite" />
+      <animate attributeName="x" begin="load+3" from="288" to="30" dur="3" repeatDur="6" final="keep" repeatCount="indefinite" />
+
+      <arc x="0" y="5" width="30" height="10" arc-width="1" start-angle="0" sweep-angle="360" fill="white" />
+      <rect x="0" y="10" width="2" height="10" fill="white" />
+      <rect x="29" y="10" width="2" height="10" fill="white" />
+      <arc x="0" y="15" width="30" height="10" arc-width="1" start-angle="90" sweep-angle="180" fill="white" />
+    </svg>
+  </svg>
+
+  <use id="game-list" href="#tile-list" height="100%">
+    <var id="reorder-enabled" value="0" />
+
+    <!-- A buffer item -->
+    <use href="#tile-list-item" height="50" fill="black" />
+
+    <!-- The games -->
+    <use id="game-0" href="#game" />
+    <use id="game-1" href="#game" />
+    <use id="game-2" href="#game" />
+    <use id="game-3" href="#game" />
+    <use id="game-4" href="#game" />
+    <use id="game-5" href="#game" />
+    <use id="game-6" href="#game" />
+    <use id="game-7" href="#game" />
+    <use id="game-8" href="#game" />
+    <use id="game-9" href="#game" />
+    <use id="game-10" href="#game" />
+    <use id="game-11" href="#game" />
+    <use id="game-12" href="#game" />
+    <use id="game-13" href="#game" />
+    <use id="game-14" href="#game" />
+    <use id="game-15" href="#game" />
+    <use id="game-16" href="#game" />
+    <use id="game-17" href="#game" />
+    <use id="game-18" href="#game" />
+    <use id="game-19" href="#game" />
+    <use id="game-20" href="#game" />
+    <use id="game-21" href="#game" />
+    <use id="game-22" href="#game" />
+    <use id="game-23" href="#game" />
+    <use id="game-24" href="#game" />
+    <use id="game-25" href="#game" />
+    <use id="game-26" href="#game" />
+    <use id="game-27" href="#game" />
+    <use id="game-28" href="#game" />
+    <use id="game-29" href="#game" />
+
+    <!-- The background rectangle -->
+    <rect height="50" width="100%" x="0" y="0" fill="fb-black" />
+
+    <!-- The update date -->
+    <text id="updated" width="100%" height="30" x="50%" y="25" text-anchor="middle" fill="white" font-size="20">Updated</text>
+
+    <rect x="5" y="35" width="100%-10" height="10" fill="white" />
+    <rect id="bar" x="6" y="36" width="336" height="8" fill="black" />
+  </use>
+</svg>
