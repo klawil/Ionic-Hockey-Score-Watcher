@@ -75,11 +75,11 @@ function sendMessage(data) {
 function getTeam(team, linescore, period) {
   var status_string = '';
   if (linescore.powerPlay && linescore.goaliePulled) {
-    status_string = '(PP, EN)';
+    status_string = ' (PP, EN)';
   } else if (linescore.powerPlay) {
-    status_string = '(PP)';
+    status_string = ' (PP)';
   } else if (linescore.goaliePulled) {
-    status_string = '(EN)';
+    status_string = ' (EN)';
   }
 
   return {
