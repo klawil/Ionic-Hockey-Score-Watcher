@@ -55,6 +55,7 @@ function addGame(game) {
 
   // Mark as updating or updated
   var bar = document.getElementById('bar');
+  var bar_fill = document.getElementById('bar-fill');
   var update_text = document.getElementById('updated');
   if ((game.i + 1) < game.count) {
     update_text.text = `Updating...`;
@@ -67,9 +68,11 @@ function addGame(game) {
     bar.x = x_start + done_pixels;
     bar.width = length - done_pixels;
     bar.style.display = 'inline';
+    bar_fill.style.display = 'inline';
   } else {
     update_text.text = `Updated ${game.updated}`;
     bar.style.display = 'none';
+    bar_fill.style.display = 'none';
   }
 
   // Show the games list
