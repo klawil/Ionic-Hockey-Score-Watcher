@@ -1,5 +1,7 @@
 import * as messaging from "messaging";
 
+var current_timeout;
+
 /**
  * Returns a friendly tiemzone name from the offset returned from
  * getTimezoneOffset
@@ -146,10 +148,15 @@ function getGameStatus(date) {
       updated: getTimeString(new Date()),
       i: i,
     })))
-    .then(() => setTimeout(getGameStatus, 30000))
+    .then(() => current_timeout = setTimeout(getGameStatus, 30000))
     .catch(e => {
       console.log(e);
     });
+}
+
+messaging.peerSocket.onclose = () => {
+  console.log('Connection Closed');
+  clearTimeout(current_timeout);
 }
 
 if (messaging.peerSocket.readyState !== messaging.peerSocket.OPEN) {
