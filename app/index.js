@@ -32,6 +32,7 @@ function addGame(game) {
     existing_game[0].away = game.away;
     existing_game[0].cast = game.cast;
     existing_game[0].game = game.game;
+    existing_game[0].updated = game.updated;
     game = existing_game[0];
   }
 
