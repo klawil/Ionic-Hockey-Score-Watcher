@@ -44,8 +44,6 @@ function addGame(game) {
   game_div.getElementById('game-top').text = game.game.top;
   game_div.getElementById('game-bottom').text = game.game.bottom;
 
-  document.getElementById('updated').text = `Updated ${game.updated}`;
-
   // Hide the remaining divs
   var i = games.length;
   var div;
@@ -54,16 +52,27 @@ function addGame(game) {
     i++;
   }
 
-  showGames(true);
-
-  // Calculate the percentage
-  var length = 336;
-  var x_start = 6;
-  var done_pixels = Math.round((game.i + 1) * length / game.count);
-
+  // Mark as updating or updated
   var bar = document.getElementById('bar');
-  bar.x = x_start + done_pixels;
-  bar.width = length - done_pixels;
+  var update_text = document.getElementById('updated');
+  if ((game.i + 1) < game.count) {
+    update_text.text = `Updating...`;
+
+    // Calculate the percentage
+    var length = 336;
+    var x_start = 6;
+    var done_pixels = Math.round((game.i + 1) * length / game.count);
+
+    bar.x = x_start + done_pixels;
+    bar.width = length - done_pixels;
+    bar.style.display = 'inline';
+  } else {
+    update_text.text = `Updated ${game.updated}`;
+    bar.style.display = 'none';
+  }
+
+  // Show the games list
+  showGames(true);
 }
 
 /**
