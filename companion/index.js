@@ -72,7 +72,7 @@ function sendMessage(data) {
  * @return {Object}           The team object with a name and score. The name
  *                            will include the status (PP, EN)
  */
-function getTeam(team, linescore) {
+function getTeam(team, linescore, period) {
   var status_string = '';
   if (linescore.powerPlay && linescore.goaliePulled) {
     status_string = '(PP, EN)';
@@ -84,7 +84,7 @@ function getTeam(team, linescore) {
 
   return {
     name: team.team.abbreviation + status_string,
-    score: linescore.score,
+    score: period === 0 ? '' : linescore.goals,
   };
 }
 
@@ -139,8 +139,8 @@ function getGameStatus(date) {
     .then(games => games.map((game, i) => sendMessage({
       action: 'add_game',
       id: game.gamePk,
-      home: getTeam(game.teams.home, game.linescore.teams.home),
-      away: getTeam(game.teams.away, game.linescore.teams.away),
+      home: getTeam(game.teams.home, game.linescore.teams.home, game.linescore.currentPeriod),
+      away: getTeam(game.teams.away, game.linescore.teams.away, game.linescore.currentPeriod),
       game: getGameState(game),
       count: games.length,
       updated: getTimeString(new Date()),
