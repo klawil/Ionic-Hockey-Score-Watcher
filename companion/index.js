@@ -103,8 +103,8 @@ function getGameState(game) {
     };
   } else if (game.status.abstractGameState === 'Final') {
     return {
-      top: game.linescore.currentPeriodOrdinal,
-      bottom: game.linescore.currentPeriodTimeRemaining,
+      top: game.linescore.currentPeriodTimeRemaining,
+      bottom: game.linescore.currentPeriodOrdinal,
     };
   } else {
     return {
