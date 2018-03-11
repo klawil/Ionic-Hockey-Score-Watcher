@@ -1,13 +1,16 @@
 {
   "fitbit": {
+    "appUUID": "68791962-3d93-41a9-89b5-538daea5e11d",
     "appType": "app",
-    "appDisplayName": "Christmas Lights Controller",
+    "appDisplayName": "NHL Hockey Dev",
     "iconFile": "resources/icon.png",
     "wipeColor": "#8bc34a",
-    "requestedPermissions": [],
+    "requestedPermissions": [
+      "access_internet"
+    ],
     "i18n": {
       "en": {
-        "name": "Christmas Lights Controller"
+        "name": "NHL Hockey Dev"
       }
     }
   }
