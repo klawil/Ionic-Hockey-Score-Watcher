@@ -3,6 +3,19 @@ import * as messaging from "messaging";
 var current_timeout;
 
 /**
+ * Returns a boolean indicating if DST is currently in effect for the user
+ * @return {Boolean} Is DST in effect
+ */
+Date.prototype.isDst = function() {
+  var jan = new Date(this.getFullYear(), 0, 1);
+  var jul = new Date(this.getFullYear(), 6, 1);
+
+  var standard_offset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+
+  return this.getTimezoneOffset() < standard_offset;
+}
+
+/**
  * Returns a friendly tiemzone name from the offset returned from
  * getTimezoneOffset
  * @param  {Integer} offset The offset in seconds from getTimezoneOffset
@@ -10,14 +23,27 @@ var current_timeout;
  */
 function getTimezone(offset) {
   var timezones = {
-    180: 'AST',
-    240: 'EST',
-    300: 'CST',
-    360: 'MST',
-    420: 'PST',
-    480: 'AKST',
-    540: 'HAST',
+    240: 'AST',
+    300: 'EST',
+    360: 'CST',
+    420: 'MST',
+    480: 'PST',
+    540: 'AKST',
+    600: 'HAST',
   };
+  var dst_timezones = {
+    180: 'ADT',
+    240: 'EDT',
+    300: 'CDT',
+    360: 'MDT',
+    420: 'PDT',
+    480: 'AKDT',
+    540: 'HADT',
+  };
+
+  if ((new Date()).isDst()) {
+    timezones = dst_timezones;
+  }
 
   if (typeof timezones[offset] !== 'undefined') {
     return timezones[offset];
