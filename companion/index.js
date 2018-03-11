@@ -10,13 +10,13 @@ var current_timeout;
  */
 function getTimezone(offset) {
   var timezones = {
-    240: 'AST',
-    300: 'EST',
-    360: 'CST',
-    420: 'MST',
-    480: 'PST',
-    540: 'AKST',
-    600: 'HAST',
+    180: 'AST',
+    240: 'EST',
+    300: 'CST',
+    360: 'MST',
+    420: 'PST',
+    480: 'AKST',
+    540: 'HAST',
   };
 
   if (typeof timezones[offset] !== 'undefined') {
