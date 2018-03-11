@@ -58,10 +58,12 @@ function getTimezone(offset) {
 
 /**
  * Returns a time string
- * @param  {Date}   date A javascript date object
- * @return {String}      H:MM AMPM TZ (e.g. 12:00 PM CST or 1:00 AM EST)
+ * @param  {Date}    date        A javascript date object
+ * @param  {Boolean} addTimezone Whether or not to add the timezone to the
+ *                               string (default true)
+ * @return {String}              H:MM AMPM TZ (e.g. 12:00 PM CST or 1:00 AM EST)
  */
-function getTimeString(date) {
+function getTimeString(date, addTimezone = true) {
   // Get the hour
   var hour = date.getHours();
   var ampm = 'AM';
@@ -74,7 +76,11 @@ function getTimeString(date) {
     hour = hour - 12;
   }
 
-  return hour + ':' + ('00' + date.getMinutes()).slice(-2) + ' ' + ampm + ' ' + getTimezone(date.getTimezoneOffset());
+  if (addTimezone) {
+    return hour + ':' + ('00' + date.getMinutes()).slice(-2) + ' ' + ampm + ' ' + getTimezone(date.getTimezoneOffset());
+  } else {
+    return hour + ':' + ('00' + date.getMinutes()).slice(-2) + ' ' + ampm;
+  }
 }
 
 /**
@@ -124,7 +130,7 @@ function getTeam(team, linescore, period) {
 function getGameState(game) {
   if (game.linescore.currentPeriod === 0) {
     return {
-      top: getTimeString(new Date(game.gameDate)),
+      top: getTimeString(new Date(game.gameDate), false),
       bottom: '',
     };
   } else if (game.status.abstractGameState === 'Final') {
