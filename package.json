@@ -2,7 +2,7 @@
   "fitbit": {
     "appUUID": "68791962-3d93-41a9-89b5-538daea5e11d",
     "appType": "app",
-    "appDisplayName": "NHL Hockey Dev",
+    "appDisplayName": "NHL Hockey",
     "iconFile": "resources/icon.png",
     "wipeColor": "#8bc34a",
     "requestedPermissions": [
@@ -10,7 +10,7 @@
     ],
     "i18n": {
       "en": {
-        "name": "NHL Hockey Dev"
+        "name": "NHL Hockey"
       }
     }
   }
