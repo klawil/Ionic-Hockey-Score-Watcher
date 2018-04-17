@@ -169,6 +169,23 @@ function getGameStatus(date) {
     method: 'GET',
   })
     .then(response => response.json())
+    .then(data => {
+      if (data.dates.length === 0) {
+        sendMessage({
+          action: 'no_games',
+          date: date
+        });
+        return {
+          dates: [
+            {
+              games: []
+            }
+          ]
+        };
+      }
+
+      return data;
+    })
     .then(data => data.dates[0].games)
     .then(games => games.map((game, i) => sendMessage({
       action: 'add_game',
@@ -179,6 +196,7 @@ function getGameStatus(date) {
       count: games.length,
       updated: getTimeString(new Date()),
       i: i,
+      date: date
     })))
     .then(() => current_timeout = setTimeout(getGameStatus, 30000))
     .catch(e => {

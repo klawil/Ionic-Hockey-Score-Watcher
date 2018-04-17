@@ -54,12 +54,11 @@ function addGame(game) {
   }
 
   // Mark as updating or updated
-  var bar = document.getElementById('bar');
-  var bar_fill = document.getElementById('bar-fill');
-  var update_text = document.getElementById('updated');
+  var list = document.getElementById('game-list');
+  var bar = list.getElementById('bar');
+  var bar_fill = list.getElementById('bar-fill');
+  var updated = list.getElementById('updated');
   if ((game.i + 1) < game.count) {
-    update_text.text = `Updating...`;
-
     // Calculate the percentage
     var length = 336;
     var x_start = 6;
@@ -69,45 +68,68 @@ function addGame(game) {
     bar.width = length - done_pixels;
     bar.style.display = 'inline';
     bar_fill.style.display = 'inline';
+    updated.style.display = 'none';
   } else {
-    update_text.text = `Updated ${game.updated}`;
     bar.style.display = 'none';
     bar_fill.style.display = 'none';
+    updated.style.display = 'inline';
+    updated.text = `Updated ${game.updated}`;
   }
 
   // Show the games list
-  showGames(true);
+  showGames(true, true);
 }
 
 /**
  * Show or hide the games screen
  * @param {Boolean} state To show or hide the game list
+ * @param {Boolean} games Are there games for this date?
  */
-function showGames(state) {
-  if (state === games_visible) {
+function showGames(state, games) {
+  if (state === games_visible && games) {
     return;
   }
 
+  // Show game-list if state is true
   document.getElementById('game-list').style.display = state
     ? 'inline'
     : 'none';
 
-  document.getElementById('loading').style.display = state
-    ? 'none'
-    : 'inline';
+  // Show loading if state is false and games is true
+  document.getElementById('loading').style.display = !state && games
+    ? 'inline'
+    : 'none';
+
+  // Show no games if state is false and games is false
+  document.getElementById('no-games').style.display = !state && !games
+    ? 'inline'
+    : 'none';
 
   games_visible = state;
 }
 
-showGames(false);
+/**
+ * Set the date in the navigation bar
+ * @param {String} date The date for the current games
+ */
+function setDate(date) {
+  document.getElementById('game-list').getElementById('date').text = date;
+  document.getElementById('no-games').getElementById('date').text = date;
+}
+
+showGames(false, true);
 
 messaging.peerSocket.onmessage = evt => {
+  if (typeof evt.data.date !== 'undefined') {
+    setDate(evt.data.date);
+  }
+
   switch (evt.data.action) {
     case 'add_game':
       addGame(evt.data);
       break;
-    case 'add_games':
-      evt.data.data.forEach(game => addGame(game));
+    case 'no_games':
+      showGames(false, false);
       break;
   }
 };
