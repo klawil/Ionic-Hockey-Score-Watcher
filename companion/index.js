@@ -159,8 +159,21 @@ function getGameStatus(date) {
 
   // Get today's date (if needed)
   if (typeof date === 'undefined') {
-    var today = new Date();
-    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var now = new Date();
+
+    // Get the current timestamp
+    var currentTime = now.getTime();
+
+    if (now.isDst()) {
+      currentTime -= (1000 * 60 * 60);
+    }
+
+    // Offset so any time before 3AM PST registers as the day before
+    currentTime -= (1000 * 60 * 60 * 8);
+
+    // Get that date
+    var today = new Date(currentTime);
+    date = today.getUTCFullYear() + '-' + (today.getUTCMonth() + 1) + '-' + today.getUTCDate();
   }
 
   var url = `https://statsapi.web.nhl.com/api/v1/schedule?startDate=${date}&endDate=${date}&expand=schedule.teams,schedule.linescore&site=en_nhl`;
