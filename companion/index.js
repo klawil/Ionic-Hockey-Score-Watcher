@@ -1,6 +1,14 @@
 import * as messaging from "messaging";
 
 var current_timeout;
+var day_offset = 0;
+
+for ( var x = 10; x <= 50; x++ ) {
+  var result = Math.sqrt(Math.pow(x, 2) * 3 / 4);
+  if (Math.abs(Math.round(result) - result) <= 0.01) {
+    console.log(x, result);
+  }
+}
 
 /**
  * Returns a boolean indicating if DST is currently in effect for the user
@@ -162,17 +170,20 @@ function getGameStatus(date) {
     var now = new Date();
 
     // Get the current timestamp
-    var currentTime = now.getTime();
+    var current_time = now.getTime();
 
     if (now.isDst()) {
-      currentTime -= (1000 * 60 * 60);
+      current_time -= (1000 * 60 * 60);
     }
 
     // Offset so any time before 3AM PST registers as the day before
-    currentTime -= (1000 * 60 * 60 * 8);
+    current_time -= (1000 * 60 * 60 * 8);
+
+    // Handle day offset from the client
+    current_time = current_time + (day_offset * 1000 * 60 * 60 * 24);
 
     // Get that date
-    var today = new Date(currentTime);
+    var today = new Date(current_time);
     date = today.getUTCFullYear() + '-' + (today.getUTCMonth() + 1) + '-' + today.getUTCDate();
   }
 
@@ -217,6 +228,16 @@ function getGameStatus(date) {
     });
 }
 
+/**
+ * Alter the offset that is used to get the games
+ * @param  {Integer} offset The offset (in days)
+ */
+function changeDate(offset) {
+  day_offset = offset;
+  clearInterval(current_timeout);
+  getGameStatus();
+}
+
 messaging.peerSocket.onclose = () => {
   console.log('Connection Closed');
   clearTimeout(current_timeout);
@@ -226,4 +247,15 @@ if (messaging.peerSocket.readyState !== messaging.peerSocket.OPEN) {
   messaging.peerSocket.onopen = getGameStatus.bind(null, undefined);
 } else {
   getGameStatus();
+}
+
+messaging.peerSocket.onmessage = evt => {
+  switch (evt.data.action) {
+    case 'change_date':
+      changeDate(evt.data.offset);
+      break;
+    default:
+      console.log(evt.data.action);
+      break;
+  }
 }

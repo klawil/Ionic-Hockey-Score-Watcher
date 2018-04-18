@@ -3,6 +3,8 @@ import document from "document";
 
 var games = [];
 var games_visible = true;
+var date_offset = 0;
+var old_date = null;
 
 /**
  * Displays a team inside the div
@@ -22,6 +24,12 @@ function showTeam(div, team, type) {
  * @param {Object} game The game information from the message
  */
 function addGame(game) {
+  // Check for a date change
+  if (game.date !== old_date) {
+    old_date = game.date;
+    clearGames();
+  }
+
   // See if the game already exists
   var existing_game = games.filter(possible_game => possible_game.id === game.id);
   if (existing_game.length === 0) {
@@ -60,8 +68,8 @@ function addGame(game) {
   var updated = list.getElementById('updated');
   if ((game.i + 1) < game.count) {
     // Calculate the percentage
-    var length = 336;
-    var x_start = 6;
+    var length = 272;
+    var x_start = 38;
     var done_pixels = Math.round((game.i + 1) * length / game.count);
 
     bar.x = x_start + done_pixels;
@@ -112,16 +120,58 @@ function showGames(state, games) {
  * Set the date in the navigation bar
  * @param {String} date The date for the current games
  */
-function setDate(date) {
+function setDateLabel(date) {
   document.getElementById('game-list').getElementById('date').text = date;
   document.getElementById('no-games').getElementById('date').text = date;
 }
 
+/**
+ * This function changes the day being displayed
+ * @param {Integer} delta The change to the date_offset
+ */
+function changeOffset(delta) {
+  date_offset += delta;
+  sendMessage({
+    action: 'change_date',
+    offset: date_offset
+  });
+}
+
+/**
+ * Sends a message to the watch and logs failures
+ * @param {Object} data The data to send
+ */
+function sendMessage(data) {
+  if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+    try {
+      messaging.peerSocket.send(data);
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    console.log('Message not sent');
+  }
+}
+
+/**
+ * Hide all of the game divs
+ */
+function clearGames() {
+  games.map(game => document.getElementById(`game-${game.div_id}`).style.display = 'none');
+  games = [];
+}
+
 showGames(false, true);
+
+// Attach button listeners
+document.getElementById('no-games').getElementById('previous').onclick = changeOffset.bind(null, -1);
+document.getElementById('game-list').getElementById('previous').onclick = changeOffset.bind(null, -1);
+document.getElementById('no-games').getElementById('next').onclick = changeOffset.bind(null, 1);
+document.getElementById('game-list').getElementById('next').onclick = changeOffset.bind(null, 1);
 
 messaging.peerSocket.onmessage = evt => {
   if (typeof evt.data.date !== 'undefined') {
-    setDate(evt.data.date);
+    setDateLabel(evt.data.date);
   }
 
   switch (evt.data.action) {
