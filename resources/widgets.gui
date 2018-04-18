@@ -29,11 +29,14 @@
       <!-- Main text -->
       <text id="date" width="100%" height="30" x="50%" y="25" text-anchor="middle" fill="white" font-size="20">{{DATE}}</text>
 
+      <!-- Progress bar -->
+      <rect id="bar-fill" x="37" y="35" width="100%-74" height="10" fill="white" />
+      <rect id="bar" x="38" y="36" width="272" height="8" fill="black" />
+
+      <!-- Last Updated Text -->
+      <text id="updated" width="100%" height="10" x="50%" y="37" text-anchor="middle" fill="white" font-size="15">{{UPDATED}}</text>
+
       <!-- Date change buttons -->
-      <!-- 32 x 38 - 16 x 19 -->
-      <!-- Start: 33 x 5 -->
-      <!-- Middle: 1 x 24 -->
-      <!-- End: 33 x 43 -->
       <rect pointer-events="visible" x="0" y="5" width="150" height="50" fill="none" id="previous">
         <line x1="33" y1="5" x2="1" y2="24" fill="white" stroke-width="1" />
         <line x1="1" y1="24" x2="33" y2="43" fill="white" stroke-width="1" />
@@ -45,13 +48,6 @@
         <line x1="347" y1="24" x2="315" y2="43" fill="white" stroke-width="1" />
         <line x1="315" y1="43" x2="315" y2="5" fill="white" stroke-width="1" />
       </rect>
-
-      <!-- Progress bar -->
-      <rect id="bar-fill" x="37" y="35" width="100%-74" height="10" fill="white" />
-      <rect id="bar" x="38" y="36" width="272" height="8" fill="black" />
-
-      <!-- Last Updated Text -->
-      <text id="updated" width="100%" height="10" x="50%" y="37" text-anchor="middle" fill="white" font-size="15">{{UPDATED}}</text>
     </symbol>
   </defs>
 </svg>
