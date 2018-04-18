@@ -135,6 +135,7 @@ function changeOffset(delta) {
     action: 'change_date',
     offset: date_offset
   });
+  clearGames();
 }
 
 /**
