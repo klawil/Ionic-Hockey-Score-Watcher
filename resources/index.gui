@@ -17,7 +17,7 @@
     <text width="100%" height="40" font-size="30" x="50%" y="50%-50" text-anchor="middle" fill="white">No Games For This Date</text>
 
     <use href="#navigation" x="0" y="0">
-      <set href="#updated" attributeName="text-buffer" to="" />
+      <set href="#updated" attributeName="display" to="none" />
       <set href="#bar" attributeName="display" to="none" />
       <set href="#bar-fill" attributeName="display" to="none" />
     </use>
