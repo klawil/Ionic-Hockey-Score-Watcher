@@ -227,7 +227,9 @@ function getGameStatus(date) {
       date: date
     })))
     .then(() => {
-      current_timeout = setTimeout(getGameStatus, 30000);
+      if (day_offset === 0) {
+        current_timeout = setTimeout(getGameStatus, 30000);
+      }
     })
     .catch((e) => {
       console.log(e);
