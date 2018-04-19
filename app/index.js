@@ -142,7 +142,7 @@ function render() {
     if (state.progress.done !== state.progress.total) {
       var bar_length = 272;
       var x_start = 38;
-      var done_pixels = Math.round((state.progress.done + 1) * bar_length / state.progress.total);
+      var done_pixels = Math.round(state.progress.done * bar_length / state.progress.total);
 
       conditionalChangeProperty(
         bar_div,
