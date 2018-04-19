@@ -21,13 +21,23 @@ const createStore = (reducer) => {
   return { getState, dispatch, subscribe };
 };
 
+const reduce_screen_state = (screens, show) => Object
+  .keys(screens)
+  .reduce((previous, screen) => {
+    previous[screen] = screen === show;
+    return previous;
+  }, {});
+
 const reducer = (state = {
   screens: {
     loading: true,
     no_games: true,
     game_list: true,
+    game_events: true,
   },
   games: [],
+  game_events: [],
+  active_game: null,
   date: 'loading',
   updated: 'loading',
   progress: {
@@ -40,32 +50,22 @@ const reducer = (state = {
     case 'SHOW_LOADING':
       return {
         ...state,
-        screens: Object
-          .keys(state.screens)
-          .reduce((previous, screen) => {
-            previous[screen] = screen === 'loading';
-            return previous;
-          }, {})
+        screens: reduce_screen_state(state.screens, 'loading')
       };
     case 'SHOW_GAME_LIST':
       return {
         ...state,
-        screens: Object
-          .keys(state.screens)
-          .reduce((previous, screen) => ({
-            ...previous,
-            [screen]: screen === 'game_list'
-          }), {})
+        screens: reduce_screen_state(state.screens, 'game_list')
       };
     case 'SHOW_NO_GAMES':
       return {
         ...state,
-        screens: Object
-          .keys(state.screens)
-          .reduce((previous, screen) => ({
-            ...previous,
-            [screen]: screen === 'no_games'
-          }), {})
+        screens: reduce_screen_state(state.screens, 'no_games')
+      };
+    case 'SHOW_GAME_EVENTS':
+      return {
+        ...state,
+        screens: reduce_screen_state(state.screens, 'game_events')
       };
 
     // Handle the date changing
@@ -123,10 +123,11 @@ const reducer = (state = {
           ]
         };
       }
+
       return {
         ...state,
         games: state.games.map((game) => {
-          if (game.id !== action.id) {
+          if (game.id !== new_game.id) {
             return game;
           }
 
@@ -137,6 +138,53 @@ const reducer = (state = {
       return {
         ...state,
         games: [],
+      };
+
+    // Handle game events
+    case 'SET_ACTIVE_GAME':
+      return {
+        ...state,
+        active_game: action.value,
+      };
+    case 'ADD_GAME_EVENT':
+      // Build the event
+      var new_event = {
+        id: action.id,
+        scorer: action.scorer,
+        assists: action.assists,
+        game_state: action.game_state,
+        time: action.time,
+      };
+
+      if (
+        state
+          .game_events
+          .filter((event) => event.id === new_event.id)
+          .length === 0
+      ) {
+        return {
+          ...state,
+          game_events: [
+            ...state.game_events,
+            new_event,
+          ],
+        };
+      }
+
+      return {
+        ...state,
+        game_events: state.game_events.map((event) => {
+          if (event.id !== new_event.id) {
+            return event;
+          }
+
+          return new_event;
+        })
+      };
+    case 'CLEAR_GAME_EVENTS':
+      return {
+        ...state,
+        game_events: [],
       };
 
     default:

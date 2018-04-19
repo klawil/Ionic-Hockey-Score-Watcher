@@ -247,6 +247,51 @@ function changeDate(offset) {
   getGameStatus();
 }
 
+/**
+ * Get the event's scoring data
+ * @param  {Integer} game_id The gamePK of the game to get events for
+ * @return {void}
+ */
+function getGameEvents(game_id) {
+  let game_teams;
+
+  fetch(`http://statsapi.web.nhl.com/api/v1/game/${game_id}/feed/live`, {
+    method: 'GET'
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      game_teams = data.gameData.teams;
+      return data.liveData.plays.allPlays;
+    })
+    .then((data) => data.filter((event) => event.result.eventTypeId === 'GOAL'))
+    .then((data) => data.map((event) => ({
+      id: event.result.eventCode,
+      scorer: event.players
+        .filter((player) => player.playerType === 'Scorer')
+        .reduce((str, player) => `${player.player.fullName} (${player.seasonTotal})`, ''),
+      assists: event.players
+        .filter((player) => player.playerType === 'Assist')
+        .reduce((str, player) => {
+          str += str === ''
+            ? ''
+            : ', ';
+          str += `${player.player.fullName} (${player.seasonTotal})`;
+          return str;
+        }, ''),
+      game_state: `${game_teams.away.abbreviation} ${event.about.goals.away}, ${game_teams.home.abbreviation} ${event.about.goals.home}`,
+      time: `${event.about.periodTime} ${event.about.ordinalNum}` +
+        (event.result.emptyNet
+          ? ', EN'
+          : '') +
+        (event.result.strength.code !== 'EVEN'
+          ? `, ${event.result.strength.code}`
+          : ''),
+      game_id: game_id,
+      action: 'add_event'
+    })))
+    .then((data) => data.map(sendMessage));
+}
+
 messaging.peerSocket.onclose = () => {
   console.log('Connection Closed');
   clearTimeout(current_timeout);
@@ -264,8 +309,11 @@ messaging.peerSocket.onmessage = (evt) => {
     case 'change_date':
       changeDate(evt.data.offset);
       break;
+    case 'active_game':
+      getGameEvents(evt.data.value);
+      break;
     default:
-      console.log(evt.data.action);
+      console.log(JSON.stringify(evt.data));
       break;
   }
 };

@@ -45,24 +45,40 @@
     <use id="game-12" href="#game" />
     <use id="game-13" href="#game" />
     <use id="game-14" href="#game" />
-    <use id="game-15" href="#game" />
-    <use id="game-16" href="#game" />
-    <use id="game-17" href="#game" />
-    <use id="game-18" href="#game" />
-    <use id="game-19" href="#game" />
-    <use id="game-20" href="#game" />
-    <use id="game-21" href="#game" />
-    <use id="game-22" href="#game" />
-    <use id="game-23" href="#game" />
-    <use id="game-24" href="#game" />
-    <use id="game-25" href="#game" />
-    <use id="game-26" href="#game" />
-    <use id="game-27" href="#game" />
-    <use id="game-28" href="#game" />
-    <use id="game-29" href="#game" />
 
     <use href="#navigation" x="0" y="0">
       <set href="#updated" attributeName="text-buffer" to="Updated" />
+    </use>
+  </use>
+
+  <use id="game-events" href="#tile-list" height="100%">
+    <var id="reorder-enabled" value="0" />
+
+    <!-- A buffer item -->
+    <use href="#tile-list-item" height="50" fill="black" />
+
+    <use id="game-event-0" href="#game-event" />
+    <use id="game-event-1" href="#game-event" />
+    <use id="game-event-2" href="#game-event" />
+    <use id="game-event-3" href="#game-event" />
+    <use id="game-event-4" href="#game-event" />
+    <use id="game-event-5" href="#game-event" />
+    <use id="game-event-6" href="#game-event" />
+    <use id="game-event-7" href="#game-event" />
+    <use id="game-event-8" href="#game-event" />
+    <use id="game-event-9" href="#game-event" />
+    <use id="game-event-10" href="#game-event" />
+    <use id="game-event-11" href="#game-event" />
+    <use id="game-event-12" href="#game-event" />
+    <use id="game-event-13" href="#game-event" />
+    <use id="game-event-14" href="#game-event" />
+
+    <use href="#navigation" x="0" y="0">
+      <set href="#updated" attributeName="display" to="none" />
+      <set href="#bar" attributeName="display" to="none" />
+      <set href="#bar-fill" attributeName="display" to="none" />
+      <set href="#previous" attributeName="display" to="none" />
+      <set href="#next" attributeName="display" to="none" />
     </use>
   </use>
 </svg>

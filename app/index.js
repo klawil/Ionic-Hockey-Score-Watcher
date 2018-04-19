@@ -7,6 +7,7 @@ const elements = {
     loading: document.getElementById('loading'),
     no_games: document.getElementById('no-games'),
     game_list: document.getElementById('game-list'),
+    game_events: document.getElementById('game-events'),
   },
   buttons: {
     previous: [
@@ -19,13 +20,19 @@ const elements = {
     ],
   },
   games: [],
+  game_events: [],
 };
 let date_offset = 0;
-let game_index = 0;
-let game_div_init;
-while ((game_div_init = document.getElementById(`game-${game_index}`)) !== null) {
-  elements.games.push(game_div_init);
-  game_index++;
+let div_index = 0;
+let div_element;
+while ((div_element = document.getElementById(`game-${div_index}`)) !== null) {
+  elements.games.push(div_element);
+  div_index++;
+}
+div_index = 0;
+while ((div_element = document.getElementById(`game-event-${div_index}`)) !== null) {
+  elements.game_events.push(div_element);
+  div_index++;
 }
 
 /**
@@ -91,8 +98,11 @@ function render() {
         return conditionalHideOrShowDiv(game_div, false);
       }
 
-      // Show the game div (if necessary)
-      conditionalHideOrShowDiv(game_div, true);
+      // Determine if the ID is different
+      if (game_div['data-game-id'] !== game_info.id) {
+        game_div['data-game-id'] = game_info.id;
+        game_div.onclick = setActiveGame.bind(null, game_info.id);
+      }
 
       // Verify the team data
       [
@@ -125,7 +135,8 @@ function render() {
         game_info.game.bottom
       );
 
-      return null;
+      // Show the game div (if necessary)
+      return conditionalHideOrShowDiv(game_div, true);
     });
 
     // Set up the updated bar
@@ -185,6 +196,55 @@ function render() {
       state.date
     );
   }
+
+  // Handle the game events screen
+  if (state.screens.game_events && state.active_game !== null) {
+    // Label the correct game
+    var game_info = state.games
+      .filter((game) => game.id === state.active_game)[0];
+    conditionalChangeProperty(
+      elements.screens.game_events.getElementById('date'),
+      'text',
+      typeof game_info === 'undefined'
+        ? 'Unknown Game'
+        : `${game_info.away.name} at ${game_info.home.name}`
+    );
+
+    elements.game_events.map((event_div, index) => {
+      // Get the event info
+      var event_info = state.game_events[index];
+
+      // Hide the event if there is none
+      if (typeof event_info === 'undefined') {
+        return conditionalHideOrShowDiv(event_div, false);
+      }
+
+      // Set up the event divs
+      conditionalChangeProperty(
+        event_div.getElementById('scorer'),
+        'text',
+        event_info.scorer
+      );
+      conditionalChangeProperty(
+        event_div.getElementById('assists'),
+        'text',
+        event_info.assists
+      );
+      conditionalChangeProperty(
+        event_div.getElementById('game-state'),
+        'text',
+        event_info.game_state
+      );
+      conditionalChangeProperty(
+        event_div.getElementById('time'),
+        'text',
+        event_info.time
+      );
+
+      // Show the event
+      return conditionalHideOrShowDiv(event_div, true);
+    });
+  }
 }
 
 /**
@@ -203,6 +263,25 @@ function changeOffset(delta) {
   });
   store.dispatch({
     action: 'CLEAR_GAMES'
+  });
+}
+
+/**
+ * Set the active game and display the events for that game
+ * @param {Integer} game_id The gamePk
+ * @return {void}
+ */
+function setActiveGame(game_id) {
+  store.dispatch({
+    action: 'SET_ACTIVE_GAME',
+    value: game_id,
+  });
+  store.dispatch({
+    action: 'SHOW_GAME_EVENTS'
+  });
+  sendMessage({
+    action: 'active_game',
+    value: game_id
   });
 }
 
@@ -240,6 +319,22 @@ store.dispatch({
   action: 'SHOW_LOADING'
 });
 
+document.onkeypress = function(e) {
+  if (e.key === 'back' && store.getState().active_game !== null) {
+    e.preventDefault();
+    store.dispatch({
+      action: 'SET_ACTIVE_GAME',
+      value: null,
+    });
+    store.dispatch({
+      action: 'CLEAR_GAME_EVENTS',
+    });
+    store.dispatch({
+      action: 'SHOW_GAME_LIST'
+    });
+  }
+};
+
 messaging.peerSocket.onmessage = (evt) => {
   // Update the date
   if (typeof evt.data.date !== 'undefined') {
@@ -263,9 +358,11 @@ messaging.peerSocket.onmessage = (evt) => {
         action: 'SET_PROGRESS_DONE',
         value: evt.data.i + 1,
       });
-      store.dispatch({
-        action: 'SHOW_GAME_LIST',
-      });
+      if (store.getState().active_game === null) {
+        store.dispatch({
+          action: 'SHOW_GAME_LIST',
+        });
+      }
       store.dispatch({
         action: 'SET_UPDATED',
         value: evt.data.updated,
@@ -275,6 +372,15 @@ messaging.peerSocket.onmessage = (evt) => {
       store.dispatch({
         action: 'SHOW_NO_GAMES',
       });
+      break;
+    case 'add_event':
+      // Verify the game ID
+      if (store.getState().active_game === evt.data.game_id) {
+        store.dispatch({
+          ...evt.data,
+          action: 'ADD_GAME_EVENT',
+        });
+      }
       break;
     default:
       console.log(JSON.stringify(evt.data));
