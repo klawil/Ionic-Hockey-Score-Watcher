@@ -35,7 +35,6 @@ const reducer = (state = {
     total: 1,
   },
 }, action) => {
-  console.log(JSON.stringify(action));
   switch (action.action) {
     // DISPLAY ITEMS
     case 'SHOW_LOADING':
@@ -108,7 +107,6 @@ const reducer = (state = {
         away: action.away,
         game: action.game,
       };
-      console.log(JSON.stringify(new_game));
 
       // Determine if the game already exists
       if (

@@ -71,7 +71,6 @@ function conditionalHideOrShowDiv(div, state) {
 function render() {
   // Get the state
   var state = store.getState();
-  console.log(JSON.stringify(state));
 
   // Handle screen state changes
   Object.keys(state.screens)
