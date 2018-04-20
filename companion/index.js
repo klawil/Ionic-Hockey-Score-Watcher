@@ -260,7 +260,7 @@ function changeDate(offset) {
 function getGameEvents(game_id) {
   let game_teams;
 
-  fetch(`http://statsapi.web.nhl.com/api/v1/game/${game_id}/feed/live`, {
+  fetch(`https://www.bigdickrick.xyz/api/v1/game/${game_id}/feed/live`, {
     method: 'GET'
   })
     .then((response) => response.json())
