@@ -21,18 +21,19 @@
       <rect id="border" width="100%" height="1" fill="grey" x="0" y="100%-1" />
     </symbol>
 
-    <symbol id="game-event" href="#tile-list-item" height="81" width="100%">
+    <symbol id="game-event" href="#tile-list-item" height="101" width="100%">
       <!-- Scorer Name -->
       <text id="scorer" width="306" height="40" font-size="30" y="30" x="21" text-anchor="start" fill="white">Scorer</text>
 
       <!-- Assister Names -->
-      <text id="assists" width="306" height="30" font-size="20" y="53" x="21" text-anchor="start" fill="white">Assists</text>
+      <text id="assist-0" width="306" height="30" font-size="20" y="53" x="21" text-anchor="start" fill="white">Assist 0</text>
+      <text id="assist-1" width="306" height="30" font-size="20" y="73" x="21" text-anchor="start" fill="white">Assist 1</text>
 
       <!-- Game Title -->
-      <text id="game-state" width="153" height="30" font-size="20" y="76" x="21" text-anchor="start" fill="white">ANA 2, SJ 1</text>
+      <text id="game-state" width="153" height="30" font-size="20" y="96" x="21" text-anchor="start" fill="white">ANA 2, SJ 1</text>
 
       <!-- Time of Goal -->
-      <text id="time" width="153" height="30" font-size="20" y="76" x="327" text-anchor="end" fill="white">09:01 3rd, PPG</text>
+      <text id="time" width="153" height="30" font-size="20" y="96" x="327" text-anchor="end" fill="white">09:01 3rd, PPG</text>
 
       <!-- Bottom border -->
       <rect id="border" width="100%" height="1" fill="grey" x="0" y="100%-1" />

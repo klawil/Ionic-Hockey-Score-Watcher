@@ -226,9 +226,18 @@ function render() {
         event_info.scorer
       );
       conditionalChangeProperty(
-        event_div.getElementById('assists'),
+        event_div.getElementById('assist-0'),
         'text',
-        event_info.assists
+        typeof event_info.assists[0] !== 'undefined'
+          ? event_info.assists[0]
+          : ''
+      );
+      conditionalChangeProperty(
+        event_div.getElementById('assist-1'),
+        'text',
+        typeof event_info.assists[1] !== 'undefined'
+          ? event_info.assists[1]
+          : ''
       );
       conditionalChangeProperty(
         event_div.getElementById('game-state'),

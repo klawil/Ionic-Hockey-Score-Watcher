@@ -276,13 +276,7 @@ function getGameEvents(game_id) {
         .reduce((str, player) => `${player.player.fullName} (${player.seasonTotal})`, ''),
       assists: event.players
         .filter((player) => player.playerType === 'Assist')
-        .reduce((str, player) => {
-          str += str === ''
-            ? ''
-            : ', ';
-          str += `${player.player.fullName} (${player.seasonTotal})`;
-          return str;
-        }, ''),
+        .map((player) => `${player.player.fullName} (${player.seasonTotal})`),
       game_state: `${game_teams.away.abbreviation} ${event.about.goals.away}, ${game_teams.home.abbreviation} ${event.about.goals.home}`,
       time: `${event.about.periodTime} ${event.about.ordinalNum}` +
         (event.result.emptyNet
