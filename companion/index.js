@@ -290,6 +290,17 @@ function getGameEvents(game_id) {
       game_id: game_id,
       action: 'add_event'
     })))
+    .then((data) => data.length > 0 ? data : [{
+      id: 'no-events',
+      i: 0,
+      count: 1,
+      scorer: 'No Scoring Events',
+      assists: [],
+      game_state: '',
+      time: '',
+      game_id: game_id,
+      action: 'add_event'
+    }])
     .then((data) => data.map(sendMessage));
 }
 
