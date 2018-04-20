@@ -148,6 +148,13 @@ function getGameState(game) {
       top: game.linescore.currentPeriodTimeRemaining,
       bottom: game.linescore.currentPeriodOrdinal,
     };
+  } else if (game.linescore.currentPeriodTimeRemaining === 'END') {
+    var remaining_seconds = game.linescore.intermissionInfo.intermissionTimeRemaining;
+
+    return {
+      top: `${game.linescore.currentPeriodOrdinal} INT`,
+      bottom: `${Math.floor(remaining_seconds / 60)}:${(remaining_seconds % 60).toString().padStart(2, '0')}`,
+    };
   }
 
   return {
@@ -231,9 +238,7 @@ function getGameStatus(date) {
         current_timeout = setTimeout(getGameStatus, 30000);
       }
     })
-    .catch((e) => {
-      console.log(e);
-    });
+    .catch((e) => console.log(e.toString()));
 }
 
 /**
