@@ -40,7 +40,11 @@ const reducer = (state = {
   active_game: null,
   date: 'loading',
   updated: 'loading',
-  progress: {
+  game_progress: {
+    done: 0,
+    total: 1,
+  },
+  event_progress: {
     done: 0,
     total: 1,
   },
@@ -81,19 +85,35 @@ const reducer = (state = {
         ...state,
         updated: action.value
       };
-    case 'SET_PROGRESS_DONE':
+    case 'SET_GAME_PROGRESS_DONE':
       return {
         ...state,
-        progress: {
-          ...state.progress,
+        game_progress: {
+          ...state.game_progress,
           done: action.value
         }
       };
-    case 'SET_PROGRESS_TOTAL':
+    case 'SET_GAME_PROGRESS_TOTAL':
       return {
         ...state,
-        progress: {
-          ...state.progress,
+        game_progress: {
+          ...state.game_progress,
+          total: action.value
+        }
+      };
+    case 'SET_EVENT_PROGRESS_DONE':
+      return {
+        ...state,
+        event_progress: {
+          ...state.event_progress,
+          done: action.value
+        }
+      };
+    case 'SET_EVENT_PROGRESS_TOTAL':
+      return {
+        ...state,
+        event_progress: {
+          ...state.event_progress,
           total: action.value
         }
       };

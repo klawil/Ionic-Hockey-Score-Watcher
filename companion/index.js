@@ -269,8 +269,10 @@ function getGameEvents(game_id) {
       return data.liveData.plays.allPlays;
     })
     .then((data) => data.filter((event) => event.result.eventTypeId === 'GOAL'))
-    .then((data) => data.map((event) => ({
+    .then((data) => data.map((event, index) => ({
       id: event.result.eventCode,
+      i: index,
+      count: data.length,
       scorer: event.players
         .filter((player) => player.playerType === 'Scorer')
         .reduce((str, player) => `${player.player.fullName} (${player.seasonTotal})`, ''),

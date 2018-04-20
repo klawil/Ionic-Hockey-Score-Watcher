@@ -79,6 +79,12 @@ function render() {
   // Get the state
   var state = store.getState();
 
+  let bar_fill_div;
+  let bar_div;
+  let bar_length;
+  let x_start;
+  let done_pixels;
+
   // Handle screen state changes
   Object.keys(state.screens)
     .map((screen) => conditionalHideOrShowDiv(
@@ -140,20 +146,23 @@ function render() {
     });
 
     // Set up the updated bar
-    var bar_div = elements.screens.game_list.getElementById('bar');
-    var bar_fill_div = elements.screens.game_list.getElementById('bar-fill');
+    bar_div = elements.screens.game_list.getElementById('bar');
+    bar_fill_div = elements.screens.game_list.getElementById('bar-fill');
     conditionalHideOrShowDiv(
       bar_div,
-      state.progress.done !== state.progress.total
+      state.game_progress.done !== state.game_progress.total
     );
     conditionalHideOrShowDiv(
       bar_fill_div,
-      state.progress.done !== state.progress.total
+      state.game_progress.done !== state.game_progress.total
     );
-    if (state.progress.done !== state.progress.total) {
-      var bar_length = 272;
-      var x_start = 38;
-      var done_pixels = Math.round(state.progress.done * bar_length / state.progress.total);
+    if (state.game_progress.done !== state.game_progress.total) {
+      bar_length = 272;
+      x_start = 38;
+      done_pixels =
+        Math.round(
+          state.game_progress.done * bar_length / state.game_progress.total
+        );
 
       conditionalChangeProperty(
         bar_div,
@@ -172,11 +181,11 @@ function render() {
     conditionalChangeProperty(
       updated_div,
       'text',
-      state.updated
+      `Updated ${state.updated}`
     );
     conditionalHideOrShowDiv(
       updated_div,
-      state.progress.done === state.progress.total
+      state.game_progress.done === state.game_progress.total
     );
   }
 
@@ -253,6 +262,37 @@ function render() {
       // Show the event
       return conditionalHideOrShowDiv(event_div, true);
     });
+
+    // Set up the updated bar
+    bar_div = elements.screens.game_events.getElementById('bar');
+    bar_fill_div = elements.screens.game_events.getElementById('bar-fill');
+    conditionalHideOrShowDiv(
+      bar_div,
+      state.event_progress.done !== state.event_progress.total
+    );
+    conditionalHideOrShowDiv(
+      bar_fill_div,
+      state.event_progress.done !== state.event_progress.total
+    );
+    if (state.event_progress.done !== state.event_progress.total) {
+      bar_length = 272;
+      x_start = 38;
+      done_pixels =
+        Math.round(
+          state.event_progress.done * bar_length / state.event_progress.total
+        );
+
+      conditionalChangeProperty(
+        bar_div,
+        'x',
+        x_start + done_pixels
+      );
+      conditionalChangeProperty(
+        bar_div,
+        'width',
+        bar_length - done_pixels
+      );
+    }
   }
 }
 
@@ -286,7 +326,7 @@ function setActiveGame(game_id) {
     value: game_id,
   });
   store.dispatch({
-    action: 'SHOW_GAME_EVENTS'
+    action: 'SHOW_LOADING'
   });
   sendMessage({
     action: 'active_game',
@@ -360,11 +400,11 @@ messaging.peerSocket.onmessage = (evt) => {
         action: 'ADD_GAME',
       });
       store.dispatch({
-        action: 'SET_PROGRESS_TOTAL',
+        action: 'SET_GAME_PROGRESS_TOTAL',
         value: evt.data.count,
       });
       store.dispatch({
-        action: 'SET_PROGRESS_DONE',
+        action: 'SET_GAME_PROGRESS_DONE',
         value: evt.data.i + 1,
       });
       if (store.getState().active_game === null) {
@@ -386,8 +426,19 @@ messaging.peerSocket.onmessage = (evt) => {
       // Verify the game ID
       if (store.getState().active_game === evt.data.game_id) {
         store.dispatch({
+          action: 'SET_EVENT_PROGRESS_TOTAL',
+          value: evt.data.count
+        });
+        store.dispatch({
+          action: 'SET_EVENT_PROGRESS_DONE',
+          value: evt.data.i + 1
+        });
+        store.dispatch({
           ...evt.data,
           action: 'ADD_GAME_EVENT',
+        });
+        store.dispatch({
+          action: 'SHOW_GAME_EVENTS'
         });
       }
       break;
